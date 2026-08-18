@@ -9,8 +9,8 @@ type HotelCardProps = {
 };
 
 export function HotelCard({ hotel }: HotelCardProps) {
-  const { isWishlisted, toggleWishlist } = useWishlist();
-  const [isFavorite, setIsFavorite] = useState(false);
+  const {  toggleWishlist } = useWishlist();
+  const [isFavorite] = useState(false);
   const locationText = `${hotel.city}, ${hotel.country}`;
   const price = hotel.pricePerNight.toLocaleString("en-IN");
 
