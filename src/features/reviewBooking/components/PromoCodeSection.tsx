@@ -17,7 +17,8 @@ export function PromoCodeSection({ promoCodes, appliedCode, onSelect, onRemove }
   const [showAll, setShowAll] = useState(false);
 
   const applied = promoCodes.find((promo) => promo.code === appliedCode);
-  const otherCodes = promoCodes.filter((promo) => promo.code !== appliedCode);
+  // const otherCodes = promoCodes.filter((promo) => promo.code !== appliedCode);
+  const otherCodes = promoCodes;
   const visibleCodes = showAll ? otherCodes : otherCodes.slice(0, COLLAPSED_COUNT);
   const hiddenCount = otherCodes.length - visibleCodes.length;
 

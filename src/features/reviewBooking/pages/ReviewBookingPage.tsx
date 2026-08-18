@@ -1,7 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { differenceInCalendarDays } from "date-fns";
 import { useMemo, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+// import { useParams, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { queryKeys } from "../../../shared/api/queryKeys";
 import { AppHeader } from "../../../shared/components/AppHeader";
 import { ErrorState } from "../../../shared/components/ErrorState";
@@ -23,6 +28,7 @@ import { toReviewSummary } from "../utils/reviewTransform";
 
 export default function ReviewBookingPage() {
   const { hotelId = "" } = useParams();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const ratePlanId = params.get("ratePlanId") ?? "";
   const roomTypeId = params.get("roomTypeId") ?? "";
@@ -100,9 +106,31 @@ export default function ReviewBookingPage() {
     showToast("Promo code removed");
   }
 
+  // function handleProceed() {
+  //   showToast("Proceeding to guest details");
+  //   navigate(`/hotels/${hotelId}/guest-details`, {
+  //   state: {
+  //     rooms: summary.hotel.rooms,
+  //     nights: summary.hotel.nights,
+  //     amount: summary.payableTotal,
+  //     hotelName: summary.hotel.name,
+  //   },
+  // });
+  // }
   function handleProceed() {
-    showToast("Proceeding to guest details");
-  }
+  if (!summary) return;
+
+  showToast("Proceeding to guest details");
+
+  navigate(`/hotels/${hotelId}/guest-details`, {
+    state: {
+      rooms: summary.hotel.rooms,
+      nights: summary.hotel.nights,
+      amount: summary.payableTotal,
+      hotelName: summary.hotel.name,
+    },
+  });
+}
 
   if (contentQuery.isError || ratesQuery.isError) {
     return (

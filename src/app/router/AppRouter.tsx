@@ -14,6 +14,9 @@ const BookingsPage = lazy(() => import("../../features/bookings/pages/BookingsPa
 const WishlistPage = lazy(() => import("../../features/wishlist/pages/WishlistPage"));
 const ExamplePage = lazy(() => import("../../features/example/pages/ExamplePage"));
 const ProfilePage = lazy(() => import("../../features/profile/pages/ProfilePage"));
+const GuestDetailsPage = lazy(
+  () => import("../../features/guestDetails/pages/GuestDetailsPage"),
+);
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -28,6 +31,10 @@ function AnimatedRoutes() {
           <Route path="hotels/:hotelId" element={<HotelDetailPage />} />
           <Route path="hotels/:hotelId/rooms" element={<RoomSelectionPage />} />
           <Route path="hotels/:hotelId/review" element={<ReviewBookingPage />} />
+          <Route
+  path="hotels/:hotelId/guest-details"
+  element={<GuestDetailsPage />}
+/>
           <Route path="bookings" element={<BookingsPage />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="example" element={<ExamplePage />} />
