@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { domAnimation, LazyMotion } from "framer-motion";
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
+import { WishlistProvider } from "../../shared/context/WishlistContext";
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(
@@ -19,7 +20,9 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LazyMotion features={domAnimation}>{children}</LazyMotion>
+      <LazyMotion features={domAnimation}>
+        <WishlistProvider>{children}</WishlistProvider>
+      </LazyMotion>
     </QueryClientProvider>
   );
 }

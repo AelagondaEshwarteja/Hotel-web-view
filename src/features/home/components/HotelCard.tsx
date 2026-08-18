@@ -2,12 +2,14 @@ import { Heart, MapPin, Star } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../../../shared/utils/cn";
 import type { Hotel } from "../types/homeTypes";
+import { useWishlist } from "../../../shared/hooks/useWishlist";
 
 type HotelCardProps = {
   hotel: Hotel;
 };
 
 export function HotelCard({ hotel }: HotelCardProps) {
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const [isFavorite, setIsFavorite] = useState(false);
   const locationText = `${hotel.city}, ${hotel.country}`;
   const price = hotel.pricePerNight.toLocaleString("en-IN");
@@ -21,7 +23,16 @@ export function HotelCard({ hotel }: HotelCardProps) {
           type="button"
           aria-label={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
           aria-pressed={isFavorite}
-          onClick={() => setIsFavorite((current) => !current)}
+          onClick={() => 
+            toggleWishlist({
+              id: hotel.id,
+              name: hotel.name,
+              image: hotel.image,
+              city: hotel.city,
+              starRating: hotel.starRating,
+              pricePerNight: hotel.pricePerNight,
+            })
+          }
           className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-card/95 text-foreground shadow-sm backdrop-blur transition active:scale-95"
         >
           <Heart

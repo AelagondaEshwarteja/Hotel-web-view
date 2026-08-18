@@ -37,7 +37,20 @@ export default function HotelDetailPage() {
   const hotel = query.data;
   return <PageTransition>
     <section className="min-h-dvh bg-muted pb-28">
-      <HotelImageGallery images={hotel.images} />
+      <HotelImageGallery 
+      images={hotel.images}
+        wishlistItem={{
+          id: hotel.id,
+          name: hotel.name,
+          city: hotel.address.city,
+          starRating: hotel.starRating,
+          pricePerNight: listHotel?.finalPrice,
+        }} />
+
+
+
+
+
       <HotelDetailHeader hotel={hotel} ratingLabel={ratingLabel(hotel.googleReviewInfo.averageRating)} />
       <HotelDetailTabs active={activeTab} onChange={setActiveTab} />
       <AnimatePresence mode="wait" initial={false}>

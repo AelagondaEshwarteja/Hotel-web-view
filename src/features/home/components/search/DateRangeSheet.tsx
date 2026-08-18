@@ -1,5 +1,6 @@
 import {
   addMonths,
+  differenceInCalendarDays,
   eachDayOfInterval,
   endOfMonth,
   endOfWeek,
@@ -8,13 +9,12 @@ import {
   isBefore,
   isSameDay,
   isSameMonth,
-  isWithinInterval,
   startOfDay,
   startOfMonth,
   startOfWeek,
 } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BottomSheet } from "../../../../shared/components/BottomSheet";
 import { cn } from "../../../../shared/utils/cn";
 
@@ -33,16 +33,14 @@ export function DateRangeSheet({ isOpen, onClose, checkIn, checkOut, onApply }: 
   const [rangeStart, setRangeStart] = useState(checkIn);
   const [rangeEnd, setRangeEnd] = useState<Date | null>(checkOut);
   const [visibleMonth, setVisibleMonth] = useState(startOfMonth(checkIn));
-  const [wasOpen, setWasOpen] = useState(isOpen);
 
-  if (isOpen !== wasOpen) {
-    setWasOpen(isOpen);
-    if (isOpen) {
-      setRangeStart(checkIn);
-      setRangeEnd(checkOut);
-      setVisibleMonth(startOfMonth(checkIn));
-    }
-  }
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setRangeStart(checkIn);
+    setRangeEnd(checkOut);
+    setVisibleMonth(startOfMonth(checkIn));
+  }, [isOpen, checkIn, checkOut]);
 
   const monthDays = eachDayOfInterval({
     start: startOfWeek(startOfMonth(visibleMonth)),
@@ -54,23 +52,31 @@ export function DateRangeSheet({ isOpen, onClose, checkIn, checkOut, onApply }: 
       return;
     }
 
-    if (!rangeEnd || isBefore(day, rangeStart) || isSameDay(day, rangeStart)) {
+    // A complete range already exists: the next click starts a fresh selection.
+    if (rangeEnd) {
       setRangeStart(day);
       setRangeEnd(null);
       return;
     }
 
+    // We are waiting for check-out. A date on/before check-in becomes the new check-in.
+    if (isBefore(day, rangeStart) || isSameDay(day, rangeStart)) {
+      setRangeStart(day);
+      return;
+    }
+
+    // A later second click is the check-out date.
     setRangeEnd(day);
   }
 
   function handleApply() {
-    if (rangeEnd) {
-      onApply(rangeStart, rangeEnd);
-      onClose();
-    }
+    if (!rangeEnd) return;
+
+    onApply(rangeStart, rangeEnd);
+    onClose();
   }
 
-  const nights = rangeEnd ? Math.round((rangeEnd.getTime() - rangeStart.getTime()) / 86_400_000) : 0;
+  const nights = rangeEnd ? differenceInCalendarDays(rangeEnd, rangeStart) : 0;
 
   return (
     <BottomSheet
@@ -140,10 +146,7 @@ export function DateRangeSheet({ isOpen, onClose, checkIn, checkOut, onApply }: 
           const isOutsideMonth = !isSameMonth(day, visibleMonth);
           const isStart = isSameDay(day, rangeStart);
           const isEnd = rangeEnd ? isSameDay(day, rangeEnd) : false;
-          const isInRange =
-            rangeEnd && isAfter(day, rangeStart) && isBefore(day, rangeEnd)
-              ? isWithinInterval(day, { start: rangeStart, end: rangeEnd })
-              : false;
+          const isInRange = Boolean(rangeEnd && isAfter(day, rangeStart) && isBefore(day, rangeEnd));
 
           return (
             <button
@@ -152,15 +155,23 @@ export function DateRangeSheet({ isOpen, onClose, checkIn, checkOut, onApply }: 
               disabled={isPast || isOutsideMonth}
               onClick={() => handleDayClick(day)}
               className={cn(
-                "mx-auto flex size-9 items-center justify-center rounded-full text-sm font-semibold transition",
+                "relative flex h-9 w-full items-center justify-center text-sm font-semibold transition",
                 isOutsideMonth && "invisible",
                 !isOutsideMonth && isPast && "text-muted-foreground/40",
                 !isPast && !isOutsideMonth && !isStart && !isEnd && !isInRange && "text-foreground active:bg-secondary",
-                isInRange && "rounded-none bg-secondary text-secondary-foreground",
-                (isStart || isEnd) && "bg-primary text-primary-foreground",
+                isInRange && "bg-secondary text-secondary-foreground",
+                isStart && rangeEnd && "rounded-l-full bg-secondary",
+                isEnd && "rounded-r-full bg-secondary",
               )}
             >
-              {format(day, "d")}
+              <span
+                className={cn(
+                  "flex size-9 items-center justify-center rounded-full",
+                  (isStart || isEnd) && "bg-primary text-primary-foreground",
+                )}
+              >
+                {format(day, "d")}
+              </span>
             </button>
           );
         })}
