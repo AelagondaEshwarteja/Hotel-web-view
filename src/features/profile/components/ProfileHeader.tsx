@@ -1,4 +1,4 @@
-import { ChevronRight, Crown, Settings } from "lucide-react";
+import { ChevronRight,  Settings } from "lucide-react";
 import type { UserProfile } from "../data/profileData";
 import { getUserFullName, getUserInitials } from "../utils/profileUtils";
 
@@ -36,10 +36,7 @@ export function ProfileHeader({ profile, onSettingsClick, onDetailsClick }: Prof
           <span className="mt-1 block truncate text-sm font-medium text-primary-foreground/85">
             {profile.countryCode} {profile.phone}
           </span>
-          <span className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/20 px-3 py-1">
-            <Crown aria-hidden="true" className="size-3.5" />
-            <span className="text-xs font-bold">{profile.memberTier} member</span>
-          </span>
+         
         </span>
 
         <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-primary-foreground/80" />
