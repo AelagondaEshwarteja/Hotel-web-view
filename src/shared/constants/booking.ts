@@ -1,0 +1,1 @@
+export const MAX_ROOMS_PER_BOOKING = 4;
