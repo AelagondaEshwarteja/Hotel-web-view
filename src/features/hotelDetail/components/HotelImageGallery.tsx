@@ -1,6 +1,8 @@
 import { ChevronLeft, Heart, Share2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Toast } from "../../../shared/components/Toast";
+import { useToast } from "../../../shared/hooks/useToast";
 import { useWishlist } from "../../../shared/hooks/useWishlist";
 import { cn } from "../../../shared/utils/cn";
 import type { HotelContentImage } from "../types/hotelDetailTypes";
@@ -22,7 +24,7 @@ export function HotelImageGallery({ images, wishlistItem }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const { isWishlisted, toggleWishlist } = useWishlist();
-
+  const { message, showToast } = useToast();
   const favorite = isWishlisted(wishlistItem.id);
 
   function handleScroll() {
@@ -32,6 +34,31 @@ export function HotelImageGallery({ images, wishlistItem }: Props) {
 
     setActiveIndex(Math.round(el.scrollLeft / el.clientWidth));
   }
+  // handle shareButton
+  async function handleShare() {
+    const shareData = {
+      title: wishlistItem.name,
+      text: `Check out ${wishlistItem.name} in ${wishlistItem.city}`,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch {
+        // User closed/cancelled the native share sheet — no error to show.
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareData.url);
+      showToast("Link copied to clipboard");
+    } catch {
+      showToast("Couldn't copy the link");
+    }
+  }
+
 
   function handleWishlist() {
     toggleWishlist({
@@ -46,7 +73,7 @@ export function HotelImageGallery({ images, wishlistItem }: Props) {
 
   return (
     <div className="relative h-[18rem] overflow-hidden bg-muted sm:h-[20rem]">
-      {/* Images */}
+    
       <div
         ref={scrollerRef}
         onScroll={handleScroll}
@@ -77,6 +104,7 @@ export function HotelImageGallery({ images, wishlistItem }: Props) {
         <button
           type="button"
           aria-label="Share hotel"
+          onClick={handleShare}
           className="flex size-10 items-center justify-center rounded-full bg-card/95 text-foreground shadow-md backdrop-blur transition active:scale-95"
         >
           <Share2 className="size-4" />
@@ -123,6 +151,7 @@ export function HotelImageGallery({ images, wishlistItem }: Props) {
       <span className="absolute bottom-4 right-4 rounded-full bg-foreground/75 px-3 py-1 text-xs font-bold text-background backdrop-blur">
         {Math.min(activeIndex + 1, images.length)} / {images.length}
       </span>
+       <Toast message={message} />
     </div>
   );
 }
