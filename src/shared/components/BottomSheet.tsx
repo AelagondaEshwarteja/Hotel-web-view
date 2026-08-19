@@ -43,7 +43,7 @@ export function BottomSheet({
   const bottomSheet = (
     <AnimatePresence>
       {isOpen ? (
-        <div className="fixed inset-0 z-[100] flex justify-center">
+        <div className="fixed inset-0 z-[1200] flex justify-center">
           {/* Backdrop */}
           <m.div
             aria-hidden="true"
