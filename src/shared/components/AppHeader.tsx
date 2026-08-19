@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft , MoreVertical } from "lucide-react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ type AppHeaderProps = {
 	showMenu?: boolean;
 };
 
-export function AppHeader({ title, subtitle,  showBack = true,  }: AppHeaderProps) {
+export function AppHeader({ title, subtitle,  showBack = true, showMenu = true , rightContent }: AppHeaderProps) {
 	const navigate = useNavigate();
 
 	return (
@@ -43,6 +43,18 @@ export function AppHeader({ title, subtitle,  showBack = true,  }: AppHeaderProp
 						{showMenu ? <MoreVertical aria-hidden="true" className="size-5" /> : null}
 					</button>
 				)} */}
+				{/* edit from here */}
+				{rightContent ?? (showMenu ? (
+    <button
+        type="button"
+        aria-label="More options"
+        className="flex size-11 shrink-0 items-center justify-center rounded-full bg-card text-foreground shadow-sm transition active:scale-95"
+    >
+        <MoreVertical aria-hidden="true" className="size-5" />
+    </button>
+) : (
+    <span className="size-11 shrink-0" />
+))}
 			</div>
 		</header>
 	);
