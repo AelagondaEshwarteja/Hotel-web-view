@@ -1,7 +1,7 @@
 import { UserRound } from "lucide-react";
 import { cn } from "../../../shared/utils/cn";
 import type { GuestTitle, RoomGuest } from "../types/guestDetailsTypes.ts";
-
+import {Input} from "../../../shared/components/Input.tsx"
 const TITLES: GuestTitle[] = ["Mr", "Mrs", "Ms"];
 
 type RoomGuestFormProps = {
@@ -60,30 +60,20 @@ export function RoomGuestForm({ room, errors, isActive = false, onActivate, onCh
 
         <div className="flex gap-2">
           <div className="flex-1">
-            <input
-              value={room.firstName}
-              onChange={(event) => onChange({ firstName: event.target.value })}
-              placeholder="First name"
-              aria-invalid={Boolean(errors?.firstName)}
-              className={`w-full rounded-xl border border-input bg-background px-3.5 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground transition focus:border-primary focus:ring-2 focus:ring-primary/20 ${
-                errors?.firstName ? "border-destructive ring-1 ring-destructive/30" : ""
-              }`}
-            />
+           <Input value={room.firstName}
+  onChange={(event) => onChange({ firstName: event.target.value })}
+  placeholder="First name"
+  invalid={Boolean(errors?.firstName)}/>
             {errors?.firstName ? (
               <p className="mt-1 pl-0.5 text-xs text-destructive">{errors.firstName}</p>
             ) : null}
           </div>
 
           <div className="flex-1">
-            <input
-              value={room.lastName}
-              onChange={(event) => onChange({ lastName: event.target.value })}
-              placeholder="Last name"
-              aria-invalid={Boolean(errors?.lastName)}
-              className={`w-full rounded-xl border border-input bg-background px-3.5 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground transition focus:border-primary focus:ring-2 focus:ring-primary/20 ${
-                errors?.lastName ? "border-destructive ring-1 ring-destructive/30" : ""
-              }`}
-            />
+           <Input  value={room.lastName}
+  onChange={(event) => onChange({ lastName: event.target.value })}
+  placeholder="Last name"
+  invalid={Boolean(errors?.lastName)}/>
             {errors?.lastName ? (
               <p className="mt-1 pl-0.5 text-xs text-destructive">{errors.lastName}</p>
             ) : null}

@@ -87,6 +87,7 @@ export default function HotelListPage() {
 
         <QuickFilterChips activeKeys={activeQuickFilters} onToggle={handleQuickFilterToggle} />
 
+<<<<<<< HEAD
         {/* <ListToolbar
           resultCount={visibleHotels.length}
           city={searchParams.city}
@@ -98,6 +99,9 @@ export default function HotelListPage() {
         /> */}
 {/* updated her e */}
 <ListToolbar
+=======
+        <ListToolbar
+>>>>>>> 21d685b (updated Input Field)
   resultCount={visibleHotels.length}
   city={searchParams.city}
   activeFilterCount={activeFilterCount}
@@ -112,6 +116,10 @@ export default function HotelListPage() {
   }}
   onToggleMap={() => setIsMapView((current) => !current)}
 />
+<<<<<<< HEAD
+=======
+
+>>>>>>> 21d685b (updated Input Field)
         {isMapView ? (
           <HotelMapPreview hotels={visibleHotels} />
         ) : (
